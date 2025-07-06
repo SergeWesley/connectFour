@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
+import ConnectFour from "./components/ConnectFour";
+import "./styles/ConnectFour.css";
 
 function App() {
   return (
     <div>
-      <h1>Bienvenue sur votre projet React !</h1>
+      <ConnectFour />
     </div>
   );
 }
