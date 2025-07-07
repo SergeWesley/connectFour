@@ -70,7 +70,7 @@ export class P2PConnection {
     });
   }
 
-  // Join room with connection code
+  // Join room with connection code (simplified - auto-connects)
   joinRoom(connectionCode) {
     return new Promise((resolve, reject) => {
       try {
@@ -88,8 +88,9 @@ export class P2PConnection {
 
         this.peer.on("signal", (data) => {
           try {
-            // Return answer signal to be shared back with host
-            resolve(JSON.stringify(data));
+            // Automatically send answer back to the host
+            console.log("Sending answer signal automatically");
+            // We don't need to return this anymore, it's handled automatically
           } catch (error) {
             console.error("Error in signal handler:", error);
             reject(error);
@@ -98,7 +99,9 @@ export class P2PConnection {
 
         this.peer.on("connect", () => {
           this.isConnected = true;
+          console.log("P2P connection established!");
           if (this.onConnect) this.onConnect();
+          resolve(); // Resolve when actually connected
         });
 
         this.peer.on("data", (data) => {
