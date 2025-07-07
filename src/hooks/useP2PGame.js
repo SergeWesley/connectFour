@@ -67,6 +67,13 @@ export const useP2PGame = () => {
     };
   }, []);
 
+  // Set up message handler
+  useEffect(() => {
+    if (p2pConnection.current) {
+      p2pConnection.current.setOnMessage(handleP2PMessage);
+    }
+  }, [handleP2PMessage]);
+
   // Handle incoming P2P messages
   const handleP2PMessage = useCallback((message) => {
     switch (message.type) {
