@@ -132,6 +132,12 @@ export const gamesAPI = {
 
   // Réinitialiser un jeu
   async resetGame(gameId) {
+    if (!supabase) {
+      throw new Error(
+        "Supabase n'est pas configuré. Veuillez ajouter vos variables d'environnement.",
+      );
+    }
+
     const { data, error } = await supabase
       .from("games")
       .update({
