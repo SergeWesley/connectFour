@@ -20,7 +20,6 @@ const P2PConnectFour = () => {
     errorMessage,
     createRoom,
     joinRoom,
-    completeConnection,
     startGame,
     makeMove,
     resetGame,
