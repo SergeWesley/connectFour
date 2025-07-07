@@ -128,7 +128,7 @@ export const useSupabaseGame = () => {
       setCurrentPlayer(game.turn);
       setMyPlayer(PLAYER1); // Host is always player 1
       setIsHost(true);
-      setGameState(GAME_STATES.WAITING_FOR_PLAYER);
+      setGameState(GAME_STATES.PLAYING); // Allow creator to play immediately
 
       // Subscribe to game updates
       subscription.current = gamesAPI.subscribeToGame(
