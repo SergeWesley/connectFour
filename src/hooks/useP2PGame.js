@@ -52,7 +52,22 @@ export const useP2PGame = () => {
     });
 
     p2pConnection.current.setOnError((error) => {
-      setErrorMessage(`Erreur de connexion: ${error.message}`);
+      console.error("P2P Connection error in hook:", error);
+      let friendlyMessage = error.message || "Erreur inconnue";
+
+      // Provide more helpful error messages
+      if (friendlyMessage.includes("Ice connection failed")) {
+        friendlyMessage =
+          "Connexion impossible. Essayez depuis un autre réseau ou vérifiez votre firewall.";
+      } else if (friendlyMessage.includes("Connection failed")) {
+        friendlyMessage =
+          "Échec de la connexion. Vérifiez que le code est correct et récent.";
+      } else if (friendlyMessage.includes("Timeout")) {
+        friendlyMessage =
+          "La connexion prend trop de temps. Vérifiez votre réseau internet.";
+      }
+
+      setErrorMessage(friendlyMessage);
       setGameState(GAME_STATES.LOBBY);
     });
 
