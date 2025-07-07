@@ -45,7 +45,7 @@ const SupabaseConnectFour = () => {
     if (player === PLAYER1) {
       return `Rouge ${isHost ? "(Vous)" : "(Adversaire)"}`;
     } else {
-      return `Jaune ${!isHost ? "(Vous)" : "(Adversaire)"}`;
+      return `Jaune ${!isHost ? "(Vous)" : myPlayer === null ? "(En attente)" : "(Adversaire)"}`;
     }
   };
 
