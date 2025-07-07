@@ -157,6 +157,13 @@ export const gamesAPI = {
 
   // S'abonner aux changements d'un jeu
   subscribeToGame(gameId, callback) {
+    if (!supabase) {
+      console.error(
+        "Supabase n'est pas configuré. Impossible de s'abonner aux changements.",
+      );
+      return null;
+    }
+
     return supabase
       .channel(`game-${gameId}`)
       .on(
