@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ConnectFour from "./ConnectFour";
-import P2PConnectFour from "./P2PConnectFour";
+import SupabaseConnectFour from "./SupabaseConnectFour";
 
 const GAME_MODES = {
   MENU: "menu",
@@ -89,7 +89,7 @@ const MainMenu = () => {
             <h5>En cas de problème de connexion :</h5>
             <ul>
               <li>🔄 Actualisez la page et réessayez</li>
-              <li>���� Essayez depuis un autre réseau (mobile, autre WiFi)</li>
+              <li>🌐 Essayez depuis un autre réseau (mobile, autre WiFi)</li>
               <li>⏰ Patientez jusqu'à 45 secondes pour la connexion</li>
               <li>🔒 Vérifiez que votre firewall autorise WebRTC</li>
             </ul>
