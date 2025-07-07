@@ -71,9 +71,8 @@ src/
 ### Fonctionnement de la connexion P2P
 
 1. **Initialisation** : Le créateur génère une offre WebRTC
-2. **Échange de signaux** : Les codes sont échangés manuellement entre joueurs
-3. **Établissement** : La connexion directe P2P est établie
-4. **Communication** : Les coups sont synchronisés via messages JSON
+2. **Connexion simple** : L'invité utilise le code et la connexion s'établit automatiquement
+3. **Communication** : Les coups sont synchronisés via messages JSON
 
 ### Messages P2P
 
