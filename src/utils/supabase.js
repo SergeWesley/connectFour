@@ -181,7 +181,7 @@ export const gamesAPI = {
 
   // Se désabonner
   unsubscribeFromGame(subscription) {
-    if (subscription) {
+    if (subscription && supabase) {
       supabase.removeChannel(subscription);
     }
   },
