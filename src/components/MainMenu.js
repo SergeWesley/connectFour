@@ -84,6 +84,16 @@ const MainMenu = () => {
             <li>✅ Latence minimale</li>
             <li>✅ Données privées</li>
           </ul>
+
+          <div className="troubleshooting">
+            <h5>En cas de problème de connexion :</h5>
+            <ul>
+              <li>🔄 Actualisez la page et réessayez</li>
+              <li>���� Essayez depuis un autre réseau (mobile, autre WiFi)</li>
+              <li>⏰ Patientez jusqu'à 45 secondes pour la connexion</li>
+              <li>🔒 Vérifiez que votre firewall autorise WebRTC</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
