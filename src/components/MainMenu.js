@@ -74,24 +74,23 @@ const MainMenu = () => {
         <div className="info-section">
           <h4>À propos du mode multijoueur</h4>
           <p>
-            Le mode multijoueur utilise une connexion P2P (peer-to-peer) directe
-            entre les navigateurs. Aucun serveur central n'est requis - vos
-            données restent privées !
+            Le mode multijoueur utilise Supabase Realtime pour synchroniser les
+            parties en temps réel. Architecture serveur robuste et fiable !
           </p>
           <ul>
-            <li>✅ Connexion directe et sécurisée</li>
-            <li>✅ Pas de serveur central</li>
-            <li>✅ Latence minimale</li>
-            <li>✅ Données privées</li>
+            <li>✅ Synchronisation en temps réel</li>
+            <li>✅ Infrastructure serveur fiable</li>
+            <li>✅ Connexion stable</li>
+            <li>✅ Pas de problème de firewall</li>
           </ul>
 
           <div className="troubleshooting">
-            <h5>En cas de problème de connexion :</h5>
+            <h5>Configuration requise :</h5>
             <ul>
-              <li>🔄 Actualisez la page et réessayez</li>
-              <li>🌐 Essayez depuis un autre réseau (mobile, autre WiFi)</li>
-              <li>⏰ Patientez jusqu'à 45 secondes pour la connexion</li>
-              <li>🔒 Vérifiez que votre firewall autorise WebRTC</li>
+              <li>🌐 Connexion internet stable</li>
+              <li>🔧 Variables d'environnement Supabase configurées</li>
+              <li>📊 Table 'games' créée dans la base de données</li>
+              <li>⚡ Abonnements temps réel activés</li>
             </ul>
           </div>
         </div>
