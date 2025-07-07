@@ -110,7 +110,21 @@ const GameLobby = ({
     <div className="connecting-screen">
       <h2>Connexion en cours...</h2>
       <div className="loading-spinner"></div>
-      <p>Établissement de la connexion P2P...</p>
+      <div className="connection-steps">
+        <p>✅ Code de connexion traité</p>
+        <p>🔄 Négociation WebRTC en cours...</p>
+        <p>⏳ Établissement de la connexion P2P...</p>
+        <div className="connection-tips">
+          <p>
+            <strong>Conseils :</strong>
+          </p>
+          <ul>
+            <li>La connexion peut prendre jusqu'à 45 secondes</li>
+            <li>Assurez-vous d'avoir une connexion internet stable</li>
+            <li>Si l'échec persiste, essayez depuis un autre réseau</li>
+          </ul>
+        </div>
+      </div>
 
       <button className="secondary-button" onClick={onReturnToLobby}>
         Annuler
