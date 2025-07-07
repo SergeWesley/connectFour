@@ -86,10 +86,10 @@ export const useP2PGame = () => {
   }, []);
 
   // Handle opponent's move
-  const handleOpponentMove = useCallback(
-    (moveData) => {
+  const handleOpponentMove = useCallback((moveData) => {
+    setBoard((currentBoard) => {
       const { col, player } = moveData;
-      const result = dropPiece(board, col, player);
+      const result = dropPiece(currentBoard, col, player);
 
       if (result) {
         const { board: newBoard, row } = result;
@@ -97,7 +97,6 @@ export const useP2PGame = () => {
         setAnimatingCell({ row, col });
 
         setTimeout(() => {
-          setBoard(newBoard);
           setAnimatingCell(null);
 
           if (checkWin(newBoard, row, col, player)) {
@@ -110,13 +109,15 @@ export const useP2PGame = () => {
             setGameOver(true);
             setGameState(GAME_STATES.FINISHED);
           } else {
-            setCurrentPlayer(currentPlayer === PLAYER1 ? PLAYER2 : PLAYER1);
+            setCurrentPlayer(player === PLAYER1 ? PLAYER2 : PLAYER1);
           }
         }, 300);
+
+        return newBoard;
       }
-    },
-    [board, currentPlayer],
-  );
+      return currentBoard;
+    });
+  }, []);
 
   // Sync game state
   const handleGameStateSync = useCallback((stateData) => {
