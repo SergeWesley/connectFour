@@ -18,13 +18,37 @@ export class P2PConnection {
         this.isInitiator = true;
         this.peer = new Peer({
           initiator: true,
-          trickle: false,
+          trickle: true, // Enable trickle ICE for better connectivity
           config: {
             iceServers: [
               { urls: "stun:stun.l.google.com:19302" },
+              { urls: "stun:stun1.l.google.com:19302" },
+              { urls: "stun:stun2.l.google.com:19302" },
+              { urls: "stun:stun3.l.google.com:19302" },
+              { urls: "stun:stun4.l.google.com:19302" },
               { urls: "stun:global.stun.twilio.com:3478" },
+              { urls: "stun:stun.services.mozilla.com" },
+              // Free TURN servers for better NAT traversal
+              {
+                urls: "turn:openrelay.metered.ca:80",
+                username: "openrelayproject",
+                credential: "openrelayproject",
+              },
+              {
+                urls: "turn:openrelay.metered.ca:443",
+                username: "openrelayproject",
+                credential: "openrelayproject",
+              },
             ],
+            iceCandidatePoolSize: 10,
           },
+          channelConfig: {
+            ordered: true,
+          },
+          // Add connection timeout
+          connectionTimeout: 30000,
+          // Enable more debugging
+          debug: 2,
         });
 
         this.peer.on("signal", (data) => {
