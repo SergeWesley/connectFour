@@ -1,0 +1,262 @@
+/* Supabase Game Styles */
+
+/* Game ID Display */
+.game-id-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+  align-items: center;
+}
+
+.game-id-display {
+  background: #e3f2fd;
+  border: 2px solid #2196f3;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  min-width: 200px;
+}
+
+.game-id-label {
+  display: block;
+  color: #1976d2;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.game-id-value {
+  display: block;
+  color: #0d47a1;
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: monospace;
+  letter-spacing: 2px;
+}
+
+.game-info {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.game-id-info {
+  background: #f8f9fa;
+  padding: 8px 15px;
+  border-radius: 20px;
+  display: inline-block;
+  color: #495057;
+  font-size: 0.9rem;
+  border: 1px solid #dee2e6;
+}
+
+.game-id-info strong {
+  color: #2196f3;
+  font-weight: 600;
+}
+
+/* Join Form for Number Input */
+.join-form input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  text-align: center;
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+.join-form input[type="number"]:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
+}
+
+/* Error Screen */
+.error-screen {
+  text-align: center;
+  padding: 30px;
+}
+
+.error-screen h2 {
+  color: #f44336;
+  margin-bottom: 15px;
+}
+
+.error-text {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #ffebee;
+  border-radius: 10px;
+  border-left: 4px solid #f44336;
+}
+
+/* Error Overlay */
+.error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.error-message-overlay {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 400px;
+  margin: 20px;
+}
+
+.error-message-overlay h3 {
+  color: #f44336;
+  margin-bottom: 15px;
+}
+
+.error-message-overlay p {
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Connection Status for Supabase */
+.connection-indicator.connected {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+/* Supabase Branding */
+.supabase-info {
+  margin: 20px 0;
+  padding: 15px;
+  background: linear-gradient(135deg, #3ecf8e 0%, #20a87a 100%);
+  color: white;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.supabase-info h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+}
+
+.supabase-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Loading states specific to Supabase operations */
+.creating-game,
+.joining-game {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.creating-game h2,
+.joining-game h2 {
+  color: #3ecf8e;
+  margin-bottom: 20px;
+}
+
+/* Enhanced Game ID Input */
+.game-id-input {
+  width: 100%;
+  max-width: 200px;
+  padding: 15px;
+  border: 3px solid #2196f3;
+  border-radius: 15px;
+  font-size: 1.5rem;
+  text-align: center;
+  font-family: monospace;
+  letter-spacing: 2px;
+  background: #f8fdff;
+  color: #0d47a1;
+  font-weight: bold;
+}
+
+.game-id-input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+
+.game-id-input::placeholder {
+  color: #90caf9;
+  font-weight: normal;
+}
+
+/* Copy button styling */
+.copy-button {
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+}
+
+.copy-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);
+}
+
+.copy-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive design for Supabase components */
+@media (max-width: 768px) {
+  .game-id-display {
+    min-width: 150px;
+    padding: 15px;
+  }
+
+  .game-id-value {
+    font-size: 1.5rem;
+  }
+
+  .game-id-input {
+    font-size: 1.2rem;
+    padding: 12px;
+  }
+
+  .supabase-info {
+    margin: 15px 0;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-id-display {
+    min-width: 120px;
+    padding: 12px;
+  }
+
+  .game-id-value {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+
+  .error-message-overlay {
+    margin: 10px;
+    padding: 20px;
+  }
+}
