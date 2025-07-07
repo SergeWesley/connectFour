@@ -336,7 +336,6 @@ export const useP2PGame = () => {
     // Actions
     createRoom,
     joinRoom,
-    completeConnection,
     startGame,
     makeMove,
     resetGame,
