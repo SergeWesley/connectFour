@@ -39,6 +39,7 @@ export class P2PConnection {
 
         this.peer.on("connect", () => {
           this.isConnected = true;
+          console.log("P2P connection established as host!");
           if (this.onConnect) this.onConnect();
         });
 
