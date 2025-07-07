@@ -109,6 +109,12 @@ export const gamesAPI = {
 
   // Faire un coup
   async makeMove(gameId, board, turn, winner = null) {
+    if (!supabase) {
+      throw new Error(
+        "Supabase n'est pas configuré. Veuillez ajouter vos variables d'environnement.",
+      );
+    }
+
     const { data, error } = await supabase
       .from("games")
       .update({
