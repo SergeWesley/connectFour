@@ -197,6 +197,46 @@
   }
 }
 
+/* Connection Steps */
+.connection-steps {
+  margin: 20px 0;
+  text-align: left;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #3498db;
+}
+
+.connection-steps p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+
+.connection-tips {
+  margin-top: 20px;
+  padding: 15px;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+}
+
+.connection-tips strong {
+  color: #856404;
+}
+
+.connection-tips ul {
+  margin: 10px 0 0 0;
+  padding-left: 20px;
+}
+
+.connection-tips li {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #856404;
+  line-height: 1.4;
+}
+
 /* Answer Code Section */
 .answer-code-section {
   margin-top: 20px;
