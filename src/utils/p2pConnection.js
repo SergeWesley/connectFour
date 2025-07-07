@@ -75,11 +75,25 @@ export class P2PConnection {
     return new Promise((resolve, reject) => {
       try {
         this.isInitiator = false;
-        this.peer = new Peer({ initiator: false, trickle: false });
+        this.peer = new Peer({
+          initiator: false,
+          trickle: false,
+          config: {
+            iceServers: [
+              { urls: "stun:stun.l.google.com:19302" },
+              { urls: "stun:global.stun.twilio.com:3478" },
+            ],
+          },
+        });
 
         this.peer.on("signal", (data) => {
-          // Return answer signal to be shared back with host
-          resolve(JSON.stringify(data));
+          try {
+            // Return answer signal to be shared back with host
+            resolve(JSON.stringify(data));
+          } catch (error) {
+            console.error("Error in signal handler:", error);
+            reject(error);
+          }
         });
 
         this.peer.on("connect", () => {
@@ -88,9 +102,13 @@ export class P2PConnection {
         });
 
         this.peer.on("data", (data) => {
-          if (this.onMessage) {
-            const message = JSON.parse(data.toString());
-            this.onMessage(message);
+          try {
+            if (this.onMessage) {
+              const message = JSON.parse(data.toString());
+              this.onMessage(message);
+            }
+          } catch (error) {
+            console.error("Error parsing message:", error);
           }
         });
 
@@ -100,6 +118,7 @@ export class P2PConnection {
         });
 
         this.peer.on("error", (err) => {
+          console.error("P2P Connection error:", err);
           if (this.onError) this.onError(err);
           reject(err);
         });
@@ -108,6 +127,7 @@ export class P2PConnection {
         const hostSignal = JSON.parse(connectionCode);
         this.peer.signal(hostSignal);
       } catch (err) {
+        console.error("Error joining room:", err);
         reject(err);
       }
     });
