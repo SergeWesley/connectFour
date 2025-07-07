@@ -55,7 +55,7 @@ const Board = ({
               key={col}
               className="column-button"
               onClick={() => handleColumnClick(col)}
-              disabled={board[0][col] !== 0}
+              disabled={disabled || board[0][col] !== 0}
             >
               ↓
             </button>
