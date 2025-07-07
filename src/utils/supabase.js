@@ -90,6 +90,12 @@ export const gamesAPI = {
 
   // Mettre à jour un jeu
   async updateGame(gameId, updates) {
+    if (!supabase) {
+      throw new Error(
+        "Supabase n'est pas configuré. Veuillez ajouter vos variables d'environnement.",
+      );
+    }
+
     const { data, error } = await supabase
       .from("games")
       .update(updates)
