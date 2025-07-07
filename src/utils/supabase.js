@@ -1,18 +1,39 @@
 import { createClient } from "@supabase/supabase-js";
 
 // Configuration Supabase
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || "YOUR_SUPABASE_URL";
-const supabaseAnonKey =
-  process.env.REACT_APP_SUPABASE_ANON_KEY || "YOUR_SUPABASE_ANON_KEY";
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
-// Créer le client Supabase
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
-    },
-  },
-});
+// Validation de la configuration
+if (
+  !supabaseUrl ||
+  !supabaseAnonKey ||
+  supabaseUrl === "YOUR_SUPABASE_URL" ||
+  supabaseAnonKey === "YOUR_SUPABASE_ANON_KEY"
+) {
+  console.warn("⚠️ Configuration Supabase manquante!");
+  console.warn(
+    "Veuillez configurer REACT_APP_SUPABASE_URL et REACT_APP_SUPABASE_ANON_KEY dans votre fichier .env",
+  );
+  console.warn(
+    "Le mode multijoueur ne fonctionnera pas sans cette configuration.",
+  );
+}
+
+// Créer le client Supabase seulement si la configuration est valide
+export const supabase =
+  supabaseUrl &&
+  supabaseAnonKey &&
+  supabaseUrl !== "YOUR_SUPABASE_URL" &&
+  supabaseAnonKey !== "YOUR_SUPABASE_ANON_KEY"
+    ? createClient(supabaseUrl, supabaseAnonKey, {
+        realtime: {
+          params: {
+            eventsPerSecond: 10,
+          },
+        },
+      })
+    : null;
 
 // Types pour les jeux
 export const GAME_STATUS = {
