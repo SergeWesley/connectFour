@@ -2,7 +2,13 @@ import React from "react";
 import Cell from "./Cell";
 import { ROWS, COLS } from "../utils/gameLogic";
 
-const Board = ({ board, onColumnClick, winningCells, animatingCell }) => {
+const Board = ({
+  board,
+  onColumnClick,
+  winningCells,
+  animatingCell,
+  disabled = false,
+}) => {
   const isWinningCell = (row, col) => {
     return winningCells.some((cell) => cell.row === row && cell.col === col);
   };
@@ -14,6 +20,7 @@ const Board = ({ board, onColumnClick, winningCells, animatingCell }) => {
   };
 
   const handleColumnClick = (col) => {
+    if (disabled) return;
     onColumnClick(col);
   };
 
