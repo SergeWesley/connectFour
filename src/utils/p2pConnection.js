@@ -137,18 +137,7 @@ export class P2PConnection {
     });
   }
 
-  // Complete connection for initiator
-  completeConnection(answerCode) {
-    return new Promise((resolve, reject) => {
-      try {
-        const answerSignal = JSON.parse(answerCode);
-        this.peer.signal(answerSignal);
-        resolve();
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
+  // This method is no longer needed with simplified connection process
 
   // Send message to peer
   sendMessage(message) {
