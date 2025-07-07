@@ -61,7 +61,7 @@ const MainMenu = () => {
 
           <div className="game-mode-card">
             <h3>Mode Multijoueur</h3>
-            <p>Jouez à distance avec un ami via connexion P2P directe</p>
+            <p>Jouez à distance avec un ami via Supabase Realtime</p>
             <button
               className="mode-button multiplayer-mode"
               onClick={() => handleModeSelect(GAME_MODES.MULTIPLAYER)}
