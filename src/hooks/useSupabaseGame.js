@@ -35,6 +35,16 @@ export const useSupabaseGame = () => {
 
   const subscription = useRef(null);
 
+  // Check if Supabase is configured
+  useEffect(() => {
+    if (!supabase) {
+      setErrorMessage(
+        "Configuration Supabase manquante. Veuillez configurer vos variables d'environnement pour utiliser le mode multijoueur.",
+      );
+      setGameState(GAME_STATES.ERROR);
+    }
+  }, []);
+
   // Find winning cells (copied from original ConnectFour.js)
   const findWinningCells = (board, row, col, player) => {
     const directions = [
