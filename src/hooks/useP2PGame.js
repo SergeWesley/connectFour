@@ -56,11 +56,13 @@ export const useP2PGame = () => {
       setGameState(GAME_STATES.LOBBY);
     });
 
-    p2pConnection.current.setOnMessage(handleP2PMessage);
-
     return () => {
-      if (p2pConnection.current) {
-        p2pConnection.current.disconnect();
+      try {
+        if (p2pConnection.current) {
+          p2pConnection.current.disconnect();
+        }
+      } catch (error) {
+        console.error("Error during cleanup:", error);
       }
     };
   }, []);
