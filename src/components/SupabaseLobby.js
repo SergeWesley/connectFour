@@ -130,11 +130,50 @@ const SupabaseLobby = ({
 
   const renderErrorScreen = () => (
     <div className="error-screen">
-      <h2>Erreur</h2>
+      <h2>Configuration Requise</h2>
       <p className="error-text">{errorMessage}</p>
 
+      {errorMessage.includes("Configuration Supabase manquante") && (
+        <div className="config-help">
+          <h3>Configuration Supabase</h3>
+          <div className="config-steps">
+            <h4>Étapes à suivre :</h4>
+            <ol>
+              <li>
+                Créez un compte sur{" "}
+                <a
+                  href="https://app.supabase.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Supabase
+                </a>
+              </li>
+              <li>Créez un nouveau projet</li>
+              <li>Allez dans Settings → API</li>
+              <li>Copiez l'URL et la clé publique</li>
+              <li>
+                Créez un fichier <code>.env</code> à la racine du projet
+              </li>
+              <li>Ajoutez vos variables :</li>
+            </ol>
+            <div className="env-example">
+              <code>
+                REACT_APP_SUPABASE_URL=https://votre-projet.supabase.co
+                <br />
+                REACT_APP_SUPABASE_ANON_KEY=votre_cle_publique
+              </code>
+            </div>
+            <p>
+              Ensuite, exécutez le script SQL <code>supabase_setup.sql</code>{" "}
+              dans l'éditeur SQL de Supabase.
+            </p>
+          </div>
+        </div>
+      )}
+
       <button className="primary-button" onClick={onLeaveGame}>
-        Retourner au lobby
+        Retourner au menu principal
       </button>
     </div>
   );
