@@ -35,6 +35,14 @@ const SupabaseConnectFour = () => {
     if (gameOver) {
       return "Match nul !";
     }
+    if (myPlayer === PLAYER2 && currentPlayer === PLAYER1) {
+      return "En attente du premier joueur...";
+    }
+    if (myPlayer === PLAYER1 && !gameOver) {
+      return currentPlayer === myPlayer
+        ? "À votre tour ! (Partie accessible avec l'ID: " + gameId + ")"
+        : "Tour de votre adversaire...";
+    }
     if (currentPlayer === myPlayer) {
       return "À votre tour !";
     }
