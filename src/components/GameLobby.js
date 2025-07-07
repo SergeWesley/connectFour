@@ -8,12 +8,10 @@ const GameLobby = ({
   opponentConnected,
   onCreateRoom,
   onJoinRoom,
-  onCompleteConnection,
   onStartGame,
   onReturnToLobby,
 }) => {
   const [joinCode, setJoinCode] = useState("");
-  const [answerCode, setAnswerCode] = useState("");
   const [showJoinForm, setShowJoinForm] = useState(false);
 
   const handleCreateRoom = () => {
