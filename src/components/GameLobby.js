@@ -96,7 +96,8 @@ const GameLobby = ({
       </div>
 
       <p className="help-text">
-        L'autre joueur doit coller ce code dans "Rejoindre une partie"
+        L'autre joueur doit coller ce code dans "Rejoindre une partie" pour se
+        connecter automatiquement
       </p>
 
       <button className="secondary-button" onClick={onReturnToLobby}>
