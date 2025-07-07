@@ -203,28 +203,18 @@ export const useP2PGame = () => {
     }
   }, []);
 
-  // Join room with code
+  // Join room with code (simplified - auto-connects)
   const joinRoom = useCallback(async (code) => {
     try {
       setGameState(GAME_STATES.CONNECTING);
       setIsHost(false);
       setMyPlayer(PLAYER2);
-      const answerCode = await p2pConnection.current.joinRoom(code);
-      return answerCode;
+      await p2pConnection.current.joinRoom(code);
+      // Connection will be established automatically, no need to return anything
     } catch (error) {
       setErrorMessage(`Erreur lors de la connexion: ${error.message}`);
       setGameState(GAME_STATES.LOBBY);
       throw error;
-    }
-  }, []);
-
-  // Complete connection (for host)
-  const completeConnection = useCallback(async (answerCode) => {
-    try {
-      await p2pConnection.current.completeConnection(answerCode);
-    } catch (error) {
-      setErrorMessage(`Erreur lors de la finalisation: ${error.message}`);
-      setGameState(GAME_STATES.LOBBY);
     }
   }, []);
 
