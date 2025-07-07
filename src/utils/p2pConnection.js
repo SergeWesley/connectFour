@@ -178,7 +178,7 @@ export class P2PConnection {
 
         this.peer.on("connect", () => {
           this.isConnected = true;
-          console.log("P2P connection established!");
+          console.log("P2P connection established as guest!");
           if (this.onConnect) this.onConnect();
           resolve(); // Resolve when actually connected
         });
@@ -196,14 +196,44 @@ export class P2PConnection {
 
         this.peer.on("close", () => {
           this.isConnected = false;
+          console.log("P2P connection closed");
           if (this.onDisconnect) this.onDisconnect();
         });
+
+        // Better ICE connection state monitoring
+        this.peer.on(
+          "iceStateChange",
+          (iceConnectionState, iceGatheringState) => {
+            console.log(
+              "ICE state change:",
+              iceConnectionState,
+              iceGatheringState,
+            );
+            if (
+              iceConnectionState === "failed" ||
+              iceConnectionState === "disconnected"
+            ) {
+              console.log("ICE connection failed, attempting to reconnect...");
+              // Don't immediately fail, WebRTC might recover
+            }
+          },
+        );
 
         this.peer.on("error", (err) => {
           console.error("P2P Connection error:", err);
           if (this.onError) this.onError(err);
           reject(err);
         });
+
+        // Add connection timeout
+        const connectionTimeout = setTimeout(() => {
+          if (!this.isConnected) {
+            console.error("Connection timeout after 30 seconds");
+            reject(
+              new Error("Timeout lors de la connexion - vérifiez votre réseau"),
+            );
+          }
+        }, 30000);
 
         // Signal with the connection code from host
         const hostSignal = JSON.parse(connectionCode);
