@@ -67,7 +67,6 @@ const P2PConnectFour = () => {
           opponentConnected={opponentConnected}
           onCreateRoom={createRoom}
           onJoinRoom={joinRoom}
-          onCompleteConnection={completeConnection}
           onStartGame={startGame}
           onReturnToLobby={returnToLobby}
         />
