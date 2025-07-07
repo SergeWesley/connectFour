@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { gamesAPI } from "../utils/supabase";
+import { gamesAPI, supabase } from "../utils/supabase";
 import {
   createEmptyBoard,
   dropPiece,
