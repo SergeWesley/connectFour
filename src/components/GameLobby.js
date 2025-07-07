@@ -22,16 +22,11 @@ const GameLobby = ({
     if (!joinCode.trim()) return;
 
     try {
-      const answer = await onJoinRoom(joinCode.trim());
-      setAnswerCode(answer);
+      await onJoinRoom(joinCode.trim());
+      // Connection will be established automatically
     } catch (error) {
       console.error("Failed to join room:", error);
     }
-  };
-
-  const handleCompleteConnection = () => {
-    if (!answerCode) return;
-    onCompleteConnection(answerCode);
   };
 
   const copyToClipboard = (text) => {
