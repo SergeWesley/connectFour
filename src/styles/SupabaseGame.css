@@ -44,7 +44,9 @@
   background: #f8f9fa;
   padding: 8px 15px;
   border-radius: 20px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   color: #495057;
   font-size: 0.9rem;
   border: 1px solid #dee2e6;
