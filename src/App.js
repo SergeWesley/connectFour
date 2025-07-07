@@ -1,11 +1,13 @@
 import React from "react";
-import ConnectFour from "./components/ConnectFour";
+import MainMenu from "./components/MainMenu";
 import "./styles/ConnectFour.css";
+import "./styles/P2PGame.css";
+import "./styles/MainMenu.css";
 
 function App() {
   return (
     <div>
-      <ConnectFour />
+      <MainMenu />
     </div>
   );
 }
