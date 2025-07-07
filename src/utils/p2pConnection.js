@@ -45,11 +45,19 @@ export class P2PConnection {
           channelConfig: {
             ordered: true,
           },
-          // Add connection timeout
-          connectionTimeout: 30000,
           // Enable more debugging
           debug: 2,
         });
+
+        // Add connection timeout
+        const connectionTimeout = setTimeout(() => {
+          if (!this.isConnected) {
+            console.error("Connection timeout after 30 seconds");
+            reject(
+              new Error("Timeout lors de la connexion - vérifiez votre réseau"),
+            );
+          }
+        }, 30000);
 
         this.peer.on("signal", (data) => {
           try {
