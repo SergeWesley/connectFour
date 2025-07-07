@@ -36,7 +36,7 @@ const MainMenu = () => {
         <button className="back-to-menu-btn" onClick={handleBackToMenu}>
           ← Retour au menu
         </button>
-        <P2PConnectFour />
+        <SupabaseConnectFour />
       </div>
     );
   }
