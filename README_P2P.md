@@ -34,13 +34,13 @@ Ce projet inclut maintenant un mode multijoueur utilisant une connexion P2P (pee
 1. Sélectionnez "Jouer en Ligne" dans le menu principal
 2. Cliquez sur "Rejoindre une partie"
 3. Collez le code de connexion reçu de votre adversaire
-4. Partagez le code de réponse généré avec votre adversaire
-5. Attendez que la connexion soit finalisée
+4. Cliquez sur "Se connecter"
+5. La connexion s'établit automatiquement !
 
-### 3. Finaliser la connexion
+### 3. C'est tout !
 
-- Le créateur de la partie doit coller le code de réponse pour établir la connexion
-- Une fois connecté, vous pouvez commencer à jouer !
+- Aucune étape supplémentaire nécessaire
+- Dès que la connexion est établie, vous pouvez commencer à jouer !
 
 ## Architecture technique
 
@@ -94,7 +94,7 @@ src/
 
 ⚠️ **NAT/Firewall** : Peut ne pas fonctionner dans certains réseaux d'entreprise très restrictifs
 ⚠️ **Échange manuel** : Les codes doivent être échangés manuellement (par chat, email, etc.)
-���️ **Pas de matchmaking** : Il faut connaître quelqu'un pour jouer
+⚠️ **Pas de matchmaking** : Il faut connaître quelqu'un pour jouer
 
 ## Installation et développement
 
