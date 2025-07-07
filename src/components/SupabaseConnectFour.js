@@ -87,6 +87,15 @@ const SupabaseConnectFour = () => {
             <span>
               ID du jeu: <strong>{gameId}</strong>
             </span>
+            {isHost && (
+              <button
+                className="copy-button"
+                onClick={() => navigator.clipboard.writeText(gameId.toString())}
+                title="Copier l'ID du jeu"
+              >
+                📋 Copier ID
+              </button>
+            )}
           </div>
         </div>
 
