@@ -11,125 +11,170 @@ export class P2PConnection {
     this.onError = null;
   }
 
+  // Get improved WebRTC configuration
+  getWebRTCConfig() {
+    return {
+      initiator: false, // Will be overridden
+      trickle: true, // Enable trickle ICE for better connectivity
+      config: {
+        iceServers: [
+          { urls: "stun:stun.l.google.com:19302" },
+          { urls: "stun:stun1.l.google.com:19302" },
+          { urls: "stun:stun2.l.google.com:19302" },
+          { urls: "stun:stun3.l.google.com:19302" },
+          { urls: "stun:stun4.l.google.com:19302" },
+          { urls: "stun:global.stun.twilio.com:3478" },
+          { urls: "stun:stun.services.mozilla.com" },
+          // Free TURN servers for better NAT traversal
+          {
+            urls: "turn:openrelay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:80?transport=tcp",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443?transport=tcp",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+        ],
+        iceCandidatePoolSize: 10,
+        iceTransportPolicy: "all",
+        bundlePolicy: "max-bundle",
+        rtcpMuxPolicy: "require",
+      },
+      channelConfig: {
+        ordered: true,
+      },
+    };
+  }
+
+  // Set up common event handlers for peer connection
+  setupPeerEvents(peer, resolve, reject, connectionTimeout) {
+    peer.on("signal", (data) => {
+      try {
+        console.log("Signal generated, sharing connection code");
+        if (this.isInitiator) {
+          // Return the connection code for sharing with other player
+          resolve(JSON.stringify(data));
+        }
+      } catch (error) {
+        console.error("Error in signal handler:", error);
+        clearTimeout(connectionTimeout);
+        reject(error);
+      }
+    });
+
+    peer.on("connect", () => {
+      this.isConnected = true;
+      console.log(
+        `P2P connection established as ${this.isInitiator ? "host" : "guest"}!`,
+      );
+      clearTimeout(connectionTimeout);
+      if (this.onConnect) this.onConnect();
+      if (!this.isInitiator) {
+        resolve(); // For joinRoom, resolve when connected
+      }
+    });
+
+    peer.on("data", (data) => {
+      try {
+        if (this.onMessage) {
+          const message = JSON.parse(data.toString());
+          this.onMessage(message);
+        }
+      } catch (error) {
+        console.error("Error parsing message:", error);
+      }
+    });
+
+    peer.on("close", () => {
+      this.isConnected = false;
+      console.log("P2P connection closed");
+      if (this.onDisconnect) this.onDisconnect();
+    });
+
+    // Better ICE connection state monitoring
+    peer.on("iceStateChange", (iceConnectionState, iceGatheringState) => {
+      console.log("ICE state change:", iceConnectionState, iceGatheringState);
+
+      if (
+        iceConnectionState === "connected" ||
+        iceConnectionState === "completed"
+      ) {
+        console.log("ICE connection successful");
+      } else if (iceConnectionState === "failed") {
+        console.error("ICE connection failed definitively");
+        const error = new Error(
+          "Connexion impossible - problème de réseau (ICE failed)",
+        );
+        clearTimeout(connectionTimeout);
+        if (this.onError) this.onError(error);
+        reject(error);
+      } else if (iceConnectionState === "disconnected") {
+        console.warn("ICE connection disconnected, might recover...");
+      }
+    });
+
+    peer.on("error", (err) => {
+      console.error("P2P Connection error:", err);
+      clearTimeout(connectionTimeout);
+      let userFriendlyError;
+
+      if (err.message && err.message.includes("Ice connection failed")) {
+        userFriendlyError = new Error(
+          "Connexion impossible - vérifiez votre réseau ou essayez depuis un autre réseau",
+        );
+      } else if (err.message && err.message.includes("Connection failed")) {
+        userFriendlyError = new Error(
+          "Échec de la connexion - le code est peut-être incorrect ou expiré",
+        );
+      } else {
+        userFriendlyError = new Error(
+          `Erreur de connexion: ${err.message || "Erreur inconnue"}`,
+        );
+      }
+
+      if (this.onError) this.onError(userFriendlyError);
+      reject(userFriendlyError);
+    });
+  }
+
   // Create connection as initiator (host)
   createRoom() {
     return new Promise((resolve, reject) => {
       try {
         this.isInitiator = true;
-        this.peer = new Peer({
-          initiator: true,
-          trickle: true, // Enable trickle ICE for better connectivity
-          config: {
-            iceServers: [
-              { urls: "stun:stun.l.google.com:19302" },
-              { urls: "stun:stun1.l.google.com:19302" },
-              { urls: "stun:stun2.l.google.com:19302" },
-              { urls: "stun:stun3.l.google.com:19302" },
-              { urls: "stun:stun4.l.google.com:19302" },
-              { urls: "stun:global.stun.twilio.com:3478" },
-              { urls: "stun:stun.services.mozilla.com" },
-              // Free TURN servers for better NAT traversal
-              {
-                urls: "turn:openrelay.metered.ca:80",
-                username: "openrelayproject",
-                credential: "openrelayproject",
-              },
-              {
-                urls: "turn:openrelay.metered.ca:443",
-                username: "openrelayproject",
-                credential: "openrelayproject",
-              },
-            ],
-            iceCandidatePoolSize: 10,
-          },
-          channelConfig: {
-            ordered: true,
-          },
-          // Enable more debugging
-          debug: 2,
-        });
+        const config = this.getWebRTCConfig();
+        config.initiator = true;
 
-        // Add connection timeout
+        this.peer = new Peer(config);
+
+        // Add connection timeout (45 seconds for better reliability)
         const connectionTimeout = setTimeout(() => {
           if (!this.isConnected) {
-            console.error("Connection timeout after 30 seconds");
-            reject(
-              new Error("Timeout lors de la connexion - vérifiez votre réseau"),
+            console.error("Connection timeout after 45 seconds");
+            const timeoutError = new Error(
+              "Timeout - la connexion prend trop de temps. Vérifiez votre réseau.",
             );
+            if (this.onError) this.onError(timeoutError);
+            reject(timeoutError);
           }
-        }, 30000);
+        }, 45000);
 
-        this.peer.on("signal", (data) => {
-          try {
-            // Return the connection code for sharing with other player
-            resolve(JSON.stringify(data));
-          } catch (error) {
-            console.error("Error in signal handler:", error);
-            reject(error);
-          }
-        });
-
-        this.peer.on("connect", () => {
-          this.isConnected = true;
-          console.log("P2P connection established as host!");
-          clearTimeout(connectionTimeout);
-          if (this.onConnect) this.onConnect();
-        });
-
-        this.peer.on("data", (data) => {
-          try {
-            if (this.onMessage) {
-              const message = JSON.parse(data.toString());
-              this.onMessage(message);
-            }
-          } catch (error) {
-            console.error("Error parsing message:", error);
-          }
-        });
-
-        this.peer.on("close", () => {
-          this.isConnected = false;
-          console.log("P2P connection closed");
-          if (this.onDisconnect) this.onDisconnect();
-        });
-
-        // Better ICE connection state monitoring
-        this.peer.on(
-          "iceStateChange",
-          (iceConnectionState, iceGatheringState) => {
-            console.log(
-              "ICE state change:",
-              iceConnectionState,
-              iceGatheringState,
-            );
-            if (
-              iceConnectionState === "failed" ||
-              iceConnectionState === "disconnected"
-            ) {
-              console.log("ICE connection failed, attempting to reconnect...");
-              // Don't immediately fail, WebRTC might recover
-            }
-          },
-        );
-
-        this.peer.on("error", (err) => {
-          console.error("P2P Connection error:", err);
-          if (this.onError) this.onError(err);
-          reject(err);
-        });
-
-        // Add connection timeout
-        const connectionTimeout = setTimeout(() => {
-          if (!this.isConnected) {
-            console.error("Connection timeout after 30 seconds");
-            reject(
-              new Error("Timeout lors de la connexion - vérifiez votre réseau"),
-            );
-          }
-        }, 30000);
+        this.setupPeerEvents(this.peer, resolve, reject, connectionTimeout);
       } catch (error) {
         console.error("Error creating peer:", error);
-        reject(error);
+        reject(new Error("Erreur lors de la création de la connexion"));
       }
     });
   }
@@ -139,129 +184,46 @@ export class P2PConnection {
     return new Promise((resolve, reject) => {
       try {
         this.isInitiator = false;
-        this.peer = new Peer({
-          initiator: false,
-          trickle: true, // Enable trickle ICE for better connectivity
-          config: {
-            iceServers: [
-              { urls: "stun:stun.l.google.com:19302" },
-              { urls: "stun:stun1.l.google.com:19302" },
-              { urls: "stun:stun2.l.google.com:19302" },
-              { urls: "stun:stun3.l.google.com:19302" },
-              { urls: "stun:stun4.l.google.com:19302" },
-              { urls: "stun:global.stun.twilio.com:3478" },
-              { urls: "stun:stun.services.mozilla.com" },
-              // Free TURN servers for better NAT traversal
-              {
-                urls: "turn:openrelay.metered.ca:80",
-                username: "openrelayproject",
-                credential: "openrelayproject",
-              },
-              {
-                urls: "turn:openrelay.metered.ca:443",
-                username: "openrelayproject",
-                credential: "openrelayproject",
-              },
-            ],
-            iceCandidatePoolSize: 10,
-          },
-          channelConfig: {
-            ordered: true,
-          },
-          // Add connection timeout
-          connectionTimeout: 30000,
-          // Enable more debugging
-          debug: 2,
-        });
+        const config = this.getWebRTCConfig();
+        config.initiator = false;
 
-        this.peer.on("signal", (data) => {
-          try {
-            // Automatically send answer back to the host
-            console.log("Sending answer signal automatically");
-            // We don't need to return this anymore, it's handled automatically
-          } catch (error) {
-            console.error("Error in signal handler:", error);
-            reject(error);
-          }
-        });
+        this.peer = new Peer(config);
 
-        this.peer.on("connect", () => {
-          this.isConnected = true;
-          console.log("P2P connection established as guest!");
-          clearTimeout(connectionTimeout);
-          if (this.onConnect) this.onConnect();
-          resolve(); // Resolve when actually connected
-        });
-
-        this.peer.on("data", (data) => {
-          try {
-            if (this.onMessage) {
-              const message = JSON.parse(data.toString());
-              this.onMessage(message);
-            }
-          } catch (error) {
-            console.error("Error parsing message:", error);
-          }
-        });
-
-        this.peer.on("close", () => {
-          this.isConnected = false;
-          console.log("P2P connection closed");
-          if (this.onDisconnect) this.onDisconnect();
-        });
-
-        // Better ICE connection state monitoring
-        this.peer.on(
-          "iceStateChange",
-          (iceConnectionState, iceGatheringState) => {
-            console.log(
-              "ICE state change:",
-              iceConnectionState,
-              iceGatheringState,
-            );
-            if (
-              iceConnectionState === "failed" ||
-              iceConnectionState === "disconnected"
-            ) {
-              console.log("ICE connection failed, attempting to reconnect...");
-              // Don't immediately fail, WebRTC might recover
-            }
-          },
-        );
-
-        this.peer.on("error", (err) => {
-          console.error("P2P Connection error:", err);
-          if (this.onError) this.onError(err);
-          reject(err);
-        });
-
-        // Add connection timeout
+        // Add connection timeout (45 seconds for better reliability)
         const connectionTimeout = setTimeout(() => {
           if (!this.isConnected) {
-            console.error("Connection timeout after 30 seconds");
-            reject(
-              new Error("Timeout lors de la connexion - vérifiez votre réseau"),
+            console.error("Connection timeout after 45 seconds");
+            const timeoutError = new Error(
+              "Timeout - impossible de se connecter. Vérifiez le code et votre réseau.",
             );
+            if (this.onError) this.onError(timeoutError);
+            reject(timeoutError);
           }
-        }, 30000);
+        }, 45000);
+
+        this.setupPeerEvents(this.peer, resolve, reject, connectionTimeout);
 
         // Signal with the connection code from host
+        console.log("Attempting to connect with provided code...");
         const hostSignal = JSON.parse(connectionCode);
         this.peer.signal(hostSignal);
       } catch (err) {
         console.error("Error joining room:", err);
-        reject(err);
+        reject(new Error("Code de connexion invalide ou erreur de format"));
       }
     });
   }
 
-  // This method is no longer needed with simplified connection process
-
   // Send message to peer
   sendMessage(message) {
     if (this.peer && this.isConnected) {
-      this.peer.send(JSON.stringify(message));
-      return true;
+      try {
+        this.peer.send(JSON.stringify(message));
+        return true;
+      } catch (error) {
+        console.error("Error sending message:", error);
+        return false;
+      }
     }
     return false;
   }
@@ -269,7 +231,11 @@ export class P2PConnection {
   // Disconnect
   disconnect() {
     if (this.peer) {
-      this.peer.destroy();
+      try {
+        this.peer.destroy();
+      } catch (error) {
+        console.error("Error during disconnect:", error);
+      }
       this.peer = null;
       this.isConnected = false;
     }
