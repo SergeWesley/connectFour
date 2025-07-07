@@ -46,6 +46,12 @@ export const GAME_STATUS = {
 export const gamesAPI = {
   // Créer un nouveau jeu
   async createGame() {
+    if (!supabase) {
+      throw new Error(
+        "Supabase n'est pas configuré. Veuillez ajouter vos variables d'environnement.",
+      );
+    }
+
     const { data, error } = await supabase
       .from("games")
       .insert([
