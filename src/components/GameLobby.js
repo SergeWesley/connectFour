@@ -109,36 +109,7 @@ const GameLobby = ({
     <div className="connecting-screen">
       <h2>Connexion en cours...</h2>
       <div className="loading-spinner"></div>
-
-      {answerCode && isHost && (
-        <div className="answer-code-section">
-          <p>Code reçu de l'autre joueur :</p>
-          <textarea
-            readOnly
-            value={answerCode}
-            className="connection-code small"
-          />
-          <button className="primary-button" onClick={handleCompleteConnection}>
-            Finaliser la connexion
-          </button>
-        </div>
-      )}
-
-      {answerCode && !isHost && (
-        <div className="answer-code-section">
-          <p>Partagez ce code avec le créateur de la partie :</p>
-          <textarea readOnly value={answerCode} className="connection-code" />
-          <button
-            className="copy-button"
-            onClick={() => copyToClipboard(answerCode)}
-          >
-            Copier
-          </button>
-          <p className="help-text">
-            Le créateur doit coller ce code pour finaliser la connexion
-          </p>
-        </div>
-      )}
+      <p>Établissement de la connexion P2P...</p>
 
       <button className="secondary-button" onClick={onReturnToLobby}>
         Annuler
