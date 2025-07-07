@@ -65,7 +65,7 @@ const GameLobby = ({
             type="text"
             value={joinCode}
             onChange={(e) => setJoinCode(e.target.value)}
-            placeholder="Collez le code de connexion ici"
+            placeholder="Collez le code de connexion ici et cliquez Se connecter"
             className="connection-input"
           />
           <button
