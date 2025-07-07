@@ -14,35 +14,59 @@ export class P2PConnection {
   // Create connection as initiator (host)
   createRoom() {
     return new Promise((resolve, reject) => {
-      this.isInitiator = true;
-      this.peer = new Peer({ initiator: true, trickle: false });
+      try {
+        this.isInitiator = true;
+        this.peer = new Peer({
+          initiator: true,
+          trickle: false,
+          config: {
+            iceServers: [
+              { urls: "stun:stun.l.google.com:19302" },
+              { urls: "stun:global.stun.twilio.com:3478" },
+            ],
+          },
+        });
 
-      this.peer.on("signal", (data) => {
-        // Return the connection code for sharing with other player
-        resolve(JSON.stringify(data));
-      });
+        this.peer.on("signal", (data) => {
+          try {
+            // Return the connection code for sharing with other player
+            resolve(JSON.stringify(data));
+          } catch (error) {
+            console.error("Error in signal handler:", error);
+            reject(error);
+          }
+        });
 
-      this.peer.on("connect", () => {
-        this.isConnected = true;
-        if (this.onConnect) this.onConnect();
-      });
+        this.peer.on("connect", () => {
+          this.isConnected = true;
+          if (this.onConnect) this.onConnect();
+        });
 
-      this.peer.on("data", (data) => {
-        if (this.onMessage) {
-          const message = JSON.parse(data.toString());
-          this.onMessage(message);
-        }
-      });
+        this.peer.on("data", (data) => {
+          try {
+            if (this.onMessage) {
+              const message = JSON.parse(data.toString());
+              this.onMessage(message);
+            }
+          } catch (error) {
+            console.error("Error parsing message:", error);
+          }
+        });
 
-      this.peer.on("close", () => {
-        this.isConnected = false;
-        if (this.onDisconnect) this.onDisconnect();
-      });
+        this.peer.on("close", () => {
+          this.isConnected = false;
+          if (this.onDisconnect) this.onDisconnect();
+        });
 
-      this.peer.on("error", (err) => {
-        if (this.onError) this.onError(err);
-        reject(err);
-      });
+        this.peer.on("error", (err) => {
+          console.error("P2P Connection error:", err);
+          if (this.onError) this.onError(err);
+          reject(err);
+        });
+      } catch (error) {
+        console.error("Error creating peer:", error);
+        reject(error);
+      }
     });
   }
 
