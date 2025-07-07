@@ -72,6 +72,12 @@ export const gamesAPI = {
 
   // Récupérer un jeu par ID
   async getGame(gameId) {
+    if (!supabase) {
+      throw new Error(
+        "Supabase n'est pas configuré. Veuillez ajouter vos variables d'environnement.",
+      );
+    }
+
     const { data, error } = await supabase
       .from("games")
       .select("*")
